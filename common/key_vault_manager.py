@@ -1,8 +1,10 @@
 import threading
 
-from utils.constants import Constants
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+
+from utils.constants import Constants
+
 
 class KeyVaultManager:
     _instance = None
@@ -27,7 +29,6 @@ class KeyVaultManager:
         self.client = SecretClient(
             vault_url=self.key_vault_url, credential=self.credential
         )
-
 
     def get_secret(self, secret_name):
         return self.client.get_secret(secret_name).value

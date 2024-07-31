@@ -1,7 +1,9 @@
 azure-storage-blob
 langchain==0.2.1
-langchain-community==0.2.1
+langchain-community
+langchain_openai
 langserve==0.2.1
+langchain_postgres
 openai==1.30.5
 fastapi==0.111.0
 langchain-anthropic==0.1.15
@@ -16,3 +18,4 @@ azure-keyvault-secrets
 black
 isort
 chardet
+uvicorn

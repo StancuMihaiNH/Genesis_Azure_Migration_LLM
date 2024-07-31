@@ -13,8 +13,8 @@ class KeyVaultSecretKeys:
     COSMOSDBKEY = "cosmosDbKey"
     OPENAI_API_KEY = "openAIAPIKey"
     OPENAI_API_KEY_LIST = "openAIAPIKeyList"
-    POSTGRES_HOST = ("dbHost")
-    POSTGRES_PORT = ("dbPort")
-    POSTGRES_USER = ("dbUser")
-    POSTGRES_PASSWORD = ("dbPassword")
-    POSTGRES_DB = ("dbName")
+    POSTGRES_HOST = "dbHost"
+    POSTGRES_PORT = "dbPort"
+    POSTGRES_USER = "dbUser"
+    POSTGRES_PASSWORD = "dbPassword"
+    POSTGRES_DB = "dbName"

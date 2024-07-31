@@ -4,25 +4,26 @@ import chardet
 import psycopg2
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import PGVector
+from langchain_openai import OpenAIEmbeddings
 from psycopg2 import sql
 
-from common.key_vault_manager import KeyVaultManager
 from common.azure_blob_client_manager import AzureBlobClientManager
+from common.key_vault_manager import KeyVaultManager
 from utils.constants import KeyVaultSecretKeys
-from utils.constants import Constants
+
 # Constants
 BLOB_PREFIXES = ["north-highland/text/raw/"]
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 COLLECTION_NAME = "poc_v0"
 ENCODINGS = ["utf-8", "latin1", "iso-8859-1", "windows-1252"]
+
 # Initialize key vault manager
 key_vault_manager = KeyVaultManager.getInstance()
 
 # Retrieve secrets
-db_name = key_vault_manager.get_secret(KeyVaultSecretKeys.POSTGRES_DB)
+db_name = "postgres"
 db_user = key_vault_manager.get_secret(KeyVaultSecretKeys.POSTGRES_USER)
 db_password = key_vault_manager.get_secret(KeyVaultSecretKeys.POSTGRES_PASSWORD)
 db_host = key_vault_manager.get_secret(KeyVaultSecretKeys.POSTGRES_HOST)
@@ -32,9 +33,9 @@ openai_key = key_vault_manager.get_secret(KeyVaultSecretKeys.OPENAI_API_KEY)
 container_instance = AzureBlobClientManager.getInstance()
 container_client = container_instance.get_container_client()
 
+
 def connect_to_db():
     conn = None
-    
     """Establishes a connection to the PostgreSQL database and adds the vector extension if it doesn't exist."""
     try:
         conn = psycopg2.connect(
@@ -66,8 +67,8 @@ def connect_to_db():
 
 def get_blob_files(container_client, prefix):
     """Returns a list of blob files from the container with the specified prefix."""
-    blob_list = container_client.list_blobs(name_starts_with=prefix)
-    return [blob.name for blob in blob_list]
+    blobs = container_client.list_blobs(name_starts_with=prefix)
+    return [blob.name for blob in blobs]
 
 
 def try_decode(data, encodings):
@@ -112,13 +113,13 @@ embeddings = OpenAIEmbeddings(api_key=openai_key)
 
 blob_keys = []
 for prefix in BLOB_PREFIXES:
-    blob_keys.extend(get_blob_files(container_instance, prefix))
+    blob_keys.extend(get_blob_files(container_client, prefix))
 print(f"Total blobs found: {len(blob_keys)}")
 
 initial_splits = []
 for key in blob_keys[:5]:
     print(f"Processing initial blob: {key}")
-    splits = load_and_split_documents_from_blob(container_instance, key)
+    splits = load_and_split_documents_from_blob(container_client, key)
     if splits:
         initial_splits.extend(splits)
 print("Initial Splitting Done")
@@ -145,7 +146,7 @@ except Exception as e:
 
 for key in blob_keys[5:]:
     final_splits = []
-    splits = load_and_split_documents_from_blob(container_instance, key)
+    splits = load_and_split_documents_from_blob(container_client, key)
     if splits:
         final_splits.extend(splits)
         print(f"Processing {key} documents")

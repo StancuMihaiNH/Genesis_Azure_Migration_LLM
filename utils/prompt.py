@@ -1,6 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-
 chat_template = """
 
     You are a helpful assistant. 

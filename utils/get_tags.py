@@ -23,7 +23,6 @@ def get_blob_files(container_client, prefix):
 def get_content_from_tags(prefix):
     # Collect all file keys from the specified Blob Storage prefixes
     list_files = get_blob_files(container_client, prefix)
-    print(list_files)
 
     folder_name = str(uuid.uuid4())
     os.makedirs(f"/tmp/{folder_name}")

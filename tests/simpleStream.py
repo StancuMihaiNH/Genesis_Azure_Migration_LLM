@@ -34,7 +34,5 @@ def test_ai():
         if line:
             full_response += line.decode('utf-8')
 
-    print(full_response)
-
 claude3opus_test()
 test_ai()

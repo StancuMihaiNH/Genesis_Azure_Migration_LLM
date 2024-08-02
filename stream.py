@@ -78,7 +78,6 @@ async def handle_gpt_4model(callback, chat_history, session_user_question, user_
         async for msg in chain.astream(
             {"chat_history": chat_history, "user_question": session_user_question}
         ):
-            print(msg) 
             yield msg + "\n"
     except Exception as e:
         print(e)
@@ -103,7 +102,6 @@ async def handle_claude_model(
         async for msg in chain.astream(
             {"chat_history": chat_history, "user_question": session_user_question}
         ):
-            print(msg)
             yield msg + "\n"
     except Exception as e:
         print(e)
@@ -112,6 +110,7 @@ async def handle_claude_model(
 
 async def handle_nh_qa_model(callback, chat_history, session_user_question):
     try:
+        print(session_user_question)
         contextualized_question, source_docs, formatted_docs = get_sourced_documents(
             session_user_question, chat_history
         )
@@ -121,6 +120,7 @@ async def handle_nh_qa_model(callback, chat_history, session_user_question):
         ]
         yield json.dumps(docs, default=set_default)
 
+        print(docs)
         llm = ChatOpenAI(
             model=OpenAIModel.GPT_4.value,
             max_tokens=4000,
@@ -186,6 +186,7 @@ async def send_message(item: Item) -> AsyncIterable[str]:
             yield msg + "\n"
 
     elif item.model == OpenAIModel.NH_QA.value:
+        print(item.model)
         async for msg in handle_nh_qa_model(
             callback, chat_history, session_user_question
         ):
@@ -195,7 +196,6 @@ async def send_message(item: Item) -> AsyncIterable[str]:
     elif item.model == OpenAIModel.TITLE.value:
         user_prompt = get_prompt(item.model, session_tags, list_files)
         async for msg in handle_title_model(callback, chat_history, user_prompt):
-            print(msg)            
             yield msg + "\n"
 
     else:

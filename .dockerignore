@@ -1,0 +1,21 @@
+# Ignore Python virtual environments and other unwanted files/folders
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+.DS_Store
+.env
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+.idea/
+*.log
+.vscode

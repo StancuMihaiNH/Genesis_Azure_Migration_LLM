@@ -1,0 +1,10 @@
+# Ignore virtual environment directories
+venv/
+
+# Ignore Visual Studio Code settings directory
+.vscode/
+
+.vscode/launch.json
+
+# Ignore all __pycache__ directories
+*/__pycache__/
